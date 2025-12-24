@@ -26,6 +26,8 @@ def main():
 
     player = Player(x=SCREEN_WIDTH/2, y=SCREEN_HEIGHT/2)
     asteroidfield = AsteroidField()
+
+    #Main game loop
     while True:
         log_state()
         for event in pygame.event.get():
@@ -35,11 +37,19 @@ def main():
         for object in drawable:
             object.draw(screen)
         updatable.update(dt)
+        # asteriod to player collision
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit()
+        # shot to asteroid collision
+        for asteroid in asteroids:
+            for shot in shots:
+                if shot.collides_with(asteroid):
+                    log_event("asteroid_shot")
+                    asteroid.split()
+                    shot.kill()
         pygame.display.flip()
         dt = clock.tick(60)/1000
 
